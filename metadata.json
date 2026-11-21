@@ -1,0 +1,8 @@
+{
+  "name": "esp32-s3  Olympus Air M5View",
+  "description": "Connects yourwaveshare ESP32-S3 1.46inch Round Display to Olympus Air A01 cameras to stream live MJPEG video and trigger remote captures.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
