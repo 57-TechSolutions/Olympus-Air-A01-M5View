@@ -18,6 +18,7 @@ import {
   generatePlatformIoIni,
   OLYMPUS_API_DOCS
 } from "../data/arduinoCode";
+import readmeContent from "../../README.md?raw";
 
 interface CodeWorkbenchProps {
   config: GeneratorConfig;
@@ -25,7 +26,7 @@ interface CodeWorkbenchProps {
 }
 
 export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeConfig }) => {
-  const [activeTab, setActiveTab] = useState<"ino" | "config" | "platformio" | "docs">("ino");
+  const [activeTab, setActiveTab] = useState<"ino" | "config" | "platformio" | "readme" | "docs">("ino");
   const [copied, setCopied] = useState(false);
 
   const arduinoSketchCode = generateArduinoSketch(config);
@@ -37,6 +38,7 @@ export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeCo
       case "ino": return arduinoSketchCode;
       case "config": return configHeaderCode;
       case "platformio": return platformIoCode;
+      case "readme": return readmeContent;
       default: return "";
     }
   };
@@ -46,6 +48,7 @@ export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeCo
       case "ino": return "OlympusAir_M5StickS3.ino";
       case "config": return "config.h";
       case "platformio": return "platformio.ini";
+      case "readme": return "README.md";
       default: return "docs.md";
     }
   };
@@ -221,11 +224,11 @@ export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeCo
       {/* Code Editor & Documentation Tabs */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
         {/* Tab Header Bar */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-800">
-          <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-slate-950 border-b border-slate-800">
+          <div className="flex items-center gap-1.5 overflow-x-auto">
             <button
               onClick={() => setActiveTab("ino")}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                 activeTab === "ino" ? "bg-slate-800 text-orange-400 shadow-sm" : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -234,7 +237,7 @@ export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeCo
             </button>
             <button
               onClick={() => setActiveTab("config")}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                 activeTab === "config" ? "bg-slate-800 text-orange-400 shadow-sm" : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -243,7 +246,7 @@ export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeCo
             </button>
             <button
               onClick={() => setActiveTab("platformio")}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                 activeTab === "platformio" ? "bg-slate-800 text-orange-400 shadow-sm" : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -251,28 +254,37 @@ export const CodeWorkbench: React.FC<CodeWorkbenchProps> = ({ config, onChangeCo
               platformio.ini
             </button>
             <button
+              onClick={() => setActiveTab("readme")}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
+                activeTab === "readme" ? "bg-slate-800 text-orange-400 shadow-sm" : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              README.md
+            </button>
+            <button
               onClick={() => setActiveTab("docs")}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                 activeTab === "docs" ? "bg-slate-800 text-orange-400 shadow-sm" : "text-slate-400 hover:text-slate-200"
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
-              Setup Guide & Pinout
+              Setup Guide &amp; Pinout
             </button>
           </div>
 
           {activeTab !== "docs" && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium whitespace-nowrap transition-colors"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied ? "Copied!" : "Copy Code"}
+                {copied ? "Copied!" : activeTab === "readme" ? "Copy README" : "Copy Code"}
               </button>
               <button
                 onClick={handleDownload}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium whitespace-nowrap transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />
                 Download {getFileName()}
